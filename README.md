@@ -5,15 +5,18 @@ The submitted data is printed to the server terminal whenever a new feedback is 
 
 ## Table of Contents
 
-- [Features](#features)
-- [Technologies](#technologies)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Environment Variables](#environment-variables)
-- [Contributing](#contributing)
+- [Feedback API](#feedback-api)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Technologies](#technologies)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Usage](#usage)
+  - [API Endpoints](#api-endpoints)
+    - [POST /api/feedback](#post-apifeedback)
+  - [Environment Variables](#environment-variables)
+  - [Contributing](#contributing)
 
 ## Features
 
@@ -43,13 +46,13 @@ The submitted data is printed to the server terminal whenever a new feedback is 
 
    ```bash
    git clone https://github.com/ImperatorOz/my-app-backend-repo.git
-   cd feedback-api
+   cd my-app-backend-repo
    ```
 
 2. Install dependencies:  
 
    ```bash
-   npm install
+   npm install express cors dotenv
    ```
 
 3. Create a `.env` file in the root directory and add your environment variables:  
@@ -61,7 +64,7 @@ The submitted data is printed to the server terminal whenever a new feedback is 
 4. Start the server:  
 
    ```bash
-   npm start
+   node src/app.js
    ```
 
 ## Usage
