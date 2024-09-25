@@ -31,7 +31,7 @@ jobs:
           ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
             cd /home/jesse/app/backend && 
             npm ci --only=production && 
-            pm2 restart app || pm2 start npm --name "app" -- start --env production -- -- --port 3000
+            pm2 start src/app.js --name "app" --env production -- --port 3000
           '
       
       - name: Clean up
