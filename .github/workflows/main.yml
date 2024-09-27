@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     
     steps:
       - name: Checkout code
@@ -26,9 +26,12 @@ jobs:
           USER: jesse
           PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
-          rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" --delete ./ ${USER}@${HOST}:/home/jesse/app/backend/ --exclude .git --exclude node_modules
-          ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
+          mkdir -p ~/.ssh
+          echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+          rsync -avz --delete ./ ${USER}@${HOST}:/home/jesse/app/backend/ --exclude .git --exclude node_modules
+          ssh ${USER}@${HOST} '
             cd /home/jesse/app/backend && 
             npm ci --only=production && 
             pm2 describe app > /dev/null && pm2 restart app --env production || pm2 start src/app.js --name "app" --env production -- --port 5000
@@ -36,4 +39,4 @@ jobs:
       
       - name: Clean up
         if: always()
-        run: rm -f private_key
+        run: rm -f ~/.ssh/id_rsa
