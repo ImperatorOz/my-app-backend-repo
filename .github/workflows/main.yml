@@ -22,9 +22,9 @@ jobs:
         
       - name: Deploy to EC2
         env:
-          HOST: ${{ secrets.HOST }}
+          HOST: ${{ secrets.HOST }}          # Ensure this is set in GitHub secrets
           USER: jesse
-          PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}  # Ensure this is set in GitHub secrets
         run: |
           mkdir -p ~/.ssh
           echo "$PRIVATE_KEY" > ~/.ssh/id_rsa
@@ -34,7 +34,7 @@ jobs:
           ssh ${USER}@${HOST} '
             cd /home/jesse/app/backend && 
             npm ci --only=production && 
-            pm2 describe app > /dev/null && pm2 restart app --env production || pm2 start src/app.js --name "app" --env production -- --port 5000
+            pm2 describe app > /dev/null && pm2 restart app || pm2 start src/app.js --name "app" -- --port 5000
           '
       
       - name: Clean up
