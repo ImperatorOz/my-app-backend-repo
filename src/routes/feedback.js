@@ -1,8 +1,13 @@
 const express = require('express');
+const fs = require('fs');
+const path = require('path');
 const router = express.Router();
 
-// In-memory storage for feedback
+// In-memory storage for feedback (if needed)
 let feedbacks = [];
+
+// Path for the feedback log file
+const feedbackFilePath = path.join(__dirname, 'feedbacks.txt');
 
 router.post('/', (req, res) => {
   try {
@@ -21,7 +26,7 @@ router.post('/', (req, res) => {
       createdAt: new Date()
     };
 
-    // Save feedback to in-memory storage
+    // Save feedback to in-memory storage (optional)
     feedbacks.push(newFeedback);
 
     // Print the submitted data to the server terminal
@@ -31,6 +36,15 @@ router.post('/', (req, res) => {
     console.log('Message:', message);
     console.log('Created At:', newFeedback.createdAt);
     console.log('------------------------');
+
+    // Append feedback to the log file
+    const feedbackEntry = `Name: ${name}, Email: ${email}, Message: ${message}, Created At: ${newFeedback.createdAt}\n`;
+    fs.appendFile(feedbackFilePath, feedbackEntry, (err) => {
+      if (err) {
+        console.error('Error writing to feedback file:', err);
+        return res.status(500).json({ message: 'Error saving feedback' });
+      }
+    });
 
     res.status(201).json({ message: 'Feedback submitted successfully' });
   } catch (error) {
